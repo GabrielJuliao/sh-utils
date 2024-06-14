@@ -21,6 +21,7 @@ curl -s https://raw.githubusercontent.com/GabrielJuliao/sh-utils/main/git/swap_r
 ### Command-line Options
 
 - `--replace <sed_expression>`: Replace remote URLs based on the provided sed expression.
+- `--restore`: Restore original remote URLs from backups.
 
 ## Script Details
 
