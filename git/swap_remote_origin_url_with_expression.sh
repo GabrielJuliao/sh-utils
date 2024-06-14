@@ -184,7 +184,7 @@ main() {
   # Validate mandatory parameters for --replace action
   if [ "$action" == "--replace" ]; then
     if [ -z "$dir" ] || [ -z "$sed_expression" ]; then
-      log_error "Error: Both <path_to_git_repos> and <sed_expression> are required for --replace action."
+      log_error "Both <path_to_git_repos> and <sed_expression> are required for --replace action."
       exit 1
     fi
   fi
