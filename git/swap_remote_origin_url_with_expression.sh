@@ -2,8 +2,8 @@
 
 # Script: swap_remote_origin_url_with_expression.sh
 # Author: Gabriel Juliao
-# Description: This script iterates through all subdirectories in the specified directory (or current directory if none specified),
-# checks if they are Git repositories, and updates their remote URLs.
+# Description: This script iterates through Git repositories in the specified directory (or current directory if none specified),
+# checks if they are Git repositories, and updates their remote URLs using sed expressions.
 
 set -e
 
@@ -105,17 +105,12 @@ process_repository() {
 # Function to process each repository
 # Arguments:
 # $1 - Action to perform ('--replace' or '--restore')
-# $2 - Directory path to process (optional)
+# $2 - Path to directory containing repositories
 # $3 - Sed expression for URL conversion (for '--replace' action)
 process_repositories() {
   local action=$1
   local dir=$2
   local sed_expression=$3
-
-  # If no directory is specified, use the current directory
-  if [ -z "$dir" ]; then
-    dir="."
-  fi
 
   # Check if --restore parameter is provided
   if [ "$action" == "--restore" ]; then
@@ -128,7 +123,7 @@ process_repositories() {
     return
   fi
 
-  # Iterate through all subdirectories
+  # Iterate through all subdirectories in the specified directory
   for sub_dir in "$dir"/*/; do
     # Check if the subdirectory is a Git repository
     if [ -d "$sub_dir" ] && [ -e "$sub_dir/.git" ]; then
@@ -145,8 +140,16 @@ main() {
 
   # Validate action parameter
   if [ "$action" != "--replace" ] && [ "$action" != "--restore" ]; then
-    echo "Invalid action parameter. Usage: $0 [--replace <sed_expression>] [--restore] [<directory>]"
+    echo "Invalid action parameter. Usage: $0 [--replace <path_to_git_repos> <sed_expression>] [--restore]"
     exit 1
+  fi
+
+  # Validate mandatory parameters for --replace action
+  if [ "$action" == "--replace" ]; then
+    if [ -z "$dir" ] || [ -z "$sed_expression" ]; then
+      echo "Error: Both <path_to_git_repos> and <sed_expression> are required for --replace action."
+      exit 1
+    fi
   fi
 
   process_repositories "$action" "$dir" "$sed_expression"
