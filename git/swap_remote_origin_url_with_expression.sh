@@ -10,7 +10,7 @@ set -e
 # Function to backup the current remote URL and repository path
 # Arguments:
 # $1 - Current remote URL
-# $2 - Repository directory path
+# $2 - Absolute path of the repository
 backup_remote_url() {
   local remote_url=$1
   local repo_path=$2
@@ -25,24 +25,21 @@ backup_remote_url() {
 }
 
 # Function to restore the original remote URL from backup
-# Arguments:
-# $1 - Repository directory path (from backup file)
 restore_remote_url() {
-  local repo_path=$1
-  local backup_file="$HOME/git_migration_backup/$repo_path/git_remote_url.backup"
+  local backup_base_dir="$HOME/git_migration_backup"
 
-  if [ -f "$backup_file" ]; then
+  # Iterate through all backup files
+  find "$backup_base_dir" -name 'git_remote_url.backup' | while read -r backup_file; do
+    local repo_path=$(sed -n '1p' "$backup_file")
     local original_url=$(sed -n '2p' "$backup_file")
-    echo "Restoring original remote URL: $original_url"
+    echo "Restoring original remote URL: $original_url for repo: $repo_path"
     if git -C "$repo_path" remote set-url origin "$original_url"; then
-      echo "Successfully restored original remote URL"
+      echo "Successfully restored original remote URL for repo: $repo_path"
       rm "$backup_file" # Remove backup file after successful restore
     else
-      echo "Failed to restore original remote URL"
+      echo "Failed to restore original remote URL for repo: $repo_path"
     fi
-  else
-    echo "Backup file '$backup_file' not found, unable to restore original remote URL"
-  fi
+  done
 }
 
 # Function to validate URL format
@@ -66,35 +63,34 @@ process_repository() {
 
   # Retrieve the current remote URL for 'origin'
   local remote_url
-  remote_url=$(git remote get-url origin)
+  remote_url=$(git remote get-url origin 2>/dev/null)
 
-  # If the remote URL is empty, skip this repository
-  if [ -z "$remote_url" ]; then
+  # If the remote URL retrieval failed, skip this repository
+  if [ $? -ne 0 ] || [ -z "$remote_url" ]; then
     echo "No remote URL found for 'origin' in directory: $dir"
     cd .. # Return to the parent directory
     return
   fi
 
-  # Check if the current remote URL matches the sed expression
-  if echo "$remote_url" | grep -qE "$sed_expression"; then
+  # Check if the current remote URL matches the desired format
+  local new_url
+  new_url=$(echo "$remote_url" | sed -E "$sed_expression")
+  if [ "$remote_url" == "$new_url" ]; then
     echo "Remote URL in directory $dir already matches the desired format, skipping."
     cd .. # Return to the parent directory
     return
   fi
 
   # Backup the current remote URL with full repository path
-  local repo_path=$(realpath --relative-to="$HOME" "$PWD")
+  local repo_path=$(realpath "$PWD")
   backup_remote_url "$remote_url" "$repo_path"
   echo "Backed up the original remote URL to $HOME/git_migration_backup/$repo_path/git_remote_url.backup in directory: $dir"
 
-  # Convert URL using sed expression
-  local new_url
-  new_url=$(echo "$remote_url" | sed -E "$sed_expression")
-  echo "Old URL: $remote_url"
-  echo "New URL: $new_url"
-
   # Validate the new URL
   if validate_url "$new_url"; then
+    echo "Old URL: $remote_url"
+    echo "New URL: $new_url"
+
     # Set the new remote URL for 'origin'
     echo "Setting new remote URL for 'origin'"
     if git remote set-url origin "$new_url"; then
@@ -121,11 +117,7 @@ process_repositories() {
 
   # Check if --restore parameter is provided
   if [ "$action" == "--restore" ]; then
-    # Iterate through all backup directories and restore
-    for backup_file in "$HOME/git_migration_backup"/*/git_remote_url.backup; do
-      local repo_path=$(dirname "$backup_file" | sed "s|$HOME/git_migration_backup/||")
-      restore_remote_url "$repo_path"
-    done
+    restore_remote_url
     return
   fi
 
@@ -134,6 +126,8 @@ process_repositories() {
     # Check if the subdirectory is a Git repository
     if [ -d "$sub_dir" ] && [ -e "$sub_dir/.git" ]; then
       process_repository "$sub_dir" "$sed_expression"
+    else
+      echo "Directory $sub_dir is not a valid Git repository, skipping."
     fi
   done
 }
