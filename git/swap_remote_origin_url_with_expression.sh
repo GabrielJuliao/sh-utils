@@ -2,7 +2,7 @@
 
 # Script: swap_remote_origin_url_with_expression.sh
 # Author: Gabriel Juliao
-# Description: This script iterates through Git repositories in the specified directory (or current directory if none specified),
+# Description: This script iterates through Git repositories in the specified directory,
 # checks if they are Git repositories, and updates their remote URLs using sed expressions.
 
 set -e
