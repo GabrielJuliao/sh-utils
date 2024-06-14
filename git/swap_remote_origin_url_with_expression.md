@@ -15,7 +15,7 @@ curl -s https://raw.githubusercontent.com/GabrielJuliao/sh-utils/main/git/swap_r
 Replace `<sed_expression>` with your specific `sed` command for URL transformation. For example:
 
 ```bash
-curl -s https://raw.githubusercontent.com/GabrielJuliao/sh-utils/main/git/swap_remote_origin_url_with_expression.sh | bash -s -- --replace 's|^([a-zA-Z]+)://([^@]+)@server1\.mydomain1\.com(:[0-9]+)?(/a)?(/[^ ]*)?|https://\2@server2.mydomain2.com/a\5|'
+curl -s https://raw.githubusercontent.com/GabrielJuliao/sh-utils/main/git/swap_remote_origin_url_with_expression.sh | bash -s -- --replace . 's|^([a-zA-Z]+)://([^@]+)@server1\.mydomain1\.com(:[0-9]+)?(/a)?(/[^ ]*)?|https://\2@server2.mydomain2.com/a\5|'
 ```
 
 ### Command-line Options

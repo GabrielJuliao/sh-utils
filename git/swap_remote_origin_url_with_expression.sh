@@ -14,25 +14,25 @@ set -e
 backup_remote_url() {
   local remote_url=$1
   local repo_path=$2
-  local backup_dir="$HOME/git_migration_backup"
+  local backup_dir="$HOME/git_migration_backup/$repo_path"
 
   # Create backup directory if it doesn't exist
   mkdir -p "$backup_dir"
 
-  # Save the remote URL backup to a file in the backup directory
-  echo "$remote_url" > "$backup_dir/${repo_path//\//_}_git_remote_url.backup"
+  # Save the repository path and remote URL to a backup file
+  echo "$repo_path" > "$backup_dir/git_remote_url.backup"
+  echo "$remote_url" >> "$backup_dir/git_remote_url.backup"
 }
 
 # Function to restore the original remote URL from backup
 # Arguments:
-# $1 - Repository directory path
+# $1 - Repository directory path (from backup file)
 restore_remote_url() {
   local repo_path=$1
-  local backup_dir="$HOME/git_migration_backup"
-  local backup_file="$backup_dir/${repo_path//\//_}_git_remote_url.backup"
+  local backup_file="$HOME/git_migration_backup/$repo_path/git_remote_url.backup"
 
   if [ -f "$backup_file" ]; then
-    local original_url=$(cat "$backup_file")
+    local original_url=$(sed -n '2p' "$backup_file")
     echo "Restoring original remote URL: $original_url"
     if git -C "$repo_path" remote set-url origin "$original_url"; then
       echo "Successfully restored original remote URL"
@@ -75,10 +75,17 @@ process_repository() {
     return
   fi
 
+  # Check if the current remote URL matches the sed expression
+  if echo "$remote_url" | grep -qE "$sed_expression"; then
+    echo "Remote URL in directory $dir already matches the desired format, skipping."
+    cd .. # Return to the parent directory
+    return
+  fi
+
   # Backup the current remote URL with full repository path
-  local repo_path=$(pwd)
+  local repo_path=$(realpath --relative-to="$HOME" "$PWD")
   backup_remote_url "$remote_url" "$repo_path"
-  echo "Backed up the original remote URL to $HOME/git_migration_backup/${repo_path//\//_}_git_remote_url.backup in directory: $dir"
+  echo "Backed up the original remote URL to $HOME/git_migration_backup/$repo_path/git_remote_url.backup in directory: $dir"
 
   # Convert URL using sed expression
   local new_url
@@ -115,9 +122,8 @@ process_repositories() {
   # Check if --restore parameter is provided
   if [ "$action" == "--restore" ]; then
     # Iterate through all backup directories and restore
-    for backup_file in "$HOME/git_migration_backup"/*_git_remote_url.backup; do
-      local repo_path=${backup_file%_git_remote_url.backup}
-      repo_path=${repo_path##*/}
+    for backup_file in "$HOME/git_migration_backup"/*/git_remote_url.backup; do
+      local repo_path=$(dirname "$backup_file" | sed "s|$HOME/git_migration_backup/||")
       restore_remote_url "$repo_path"
     done
     return
