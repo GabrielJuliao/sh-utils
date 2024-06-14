@@ -160,12 +160,20 @@ process_repositories() {
 
   # Iterate through all subdirectories in the specified directory
   for sub_dir in "$dir"/*/; do
+
+    # Check if .git directory exists in subdirectory
+    if [ ! -d "$sub_dir/.git" ]; then
+      log_warning "Directory $sub_dir is not a Git repository or does not contain .git directory, skipping"
+      continue
+    fi
+
     # Check if the subdirectory is a Git repository
     if [ -d "$sub_dir" ] && git -C "$sub_dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
       process_repository "$sub_dir" "$sed_expression"
     else
       log_warning "Directory $sub_dir is not a valid Git repository, skipping"
     fi
+  
   done
 }
 
