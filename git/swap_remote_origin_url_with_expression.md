@@ -26,7 +26,7 @@ curl -s https://raw.githubusercontent.com/GabrielJuliao/sh-utils/main/git/swap_r
 ## Script Details
 
 - **Requirements**: Bash shell, Git installed and configured.
-- **License**: MIT License - see [LICENSE](../LICENSE) file for details.
+- **License**: GNU GPL - see [LICENSE](../LICENSE) file for details.
 - **Contributing**: Fork the repository, create your feature branch, commit changes, and submit a pull request.
 
 ## Usage Notes
