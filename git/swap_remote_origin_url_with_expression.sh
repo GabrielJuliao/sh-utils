@@ -81,7 +81,7 @@ restore_remote_url() {
 # $1 - URL to validate
 validate_url() {
   local url=$1
-  local regex='^(https?|ssh):\/\/[a-zA-Z0-9.-]+(:[0-9]+)?\/?.*$'
+  local regex='^(https?|ssh|git)://[a-zA-Z0-9.-]+(:[0-9]+)?/?.*|git@[a-zA-Z0-9.-]+:[a-zA-Z0-9._-]+/[a-zA-Z0-9._-]+\.git$'
   [[ "$url" =~ $regex ]]
 }
 
