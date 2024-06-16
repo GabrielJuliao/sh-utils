@@ -41,7 +41,7 @@ curl -s https://raw.githubusercontent.com/GabrielJuliao/sh-utils/main/<script-di
 
 ### Contributing
 
-Contributions are welcome! To contribute to sh-utils - see [Contribution Guidelines](CONTRIBUTING)
+Contributions are welcome! To contribute to sh-utils - see [Contribution Guidelines](CONTRIBUTING.md)
 
 ### License
 
