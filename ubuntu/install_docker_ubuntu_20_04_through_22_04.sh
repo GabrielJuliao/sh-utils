@@ -150,7 +150,7 @@ main() {
   log_success "Docker installation completed successfully!"
   log_info "The log file is located at: \"$log_file\""
 
-  log_info "Run the below commands as a normal user to manage Docker without sudo:"
+  printf "\n\nRun the below commands as a normal user to manage Docker without sudo:\n\n"
   printf "sudo groupadd docker\n"
   printf "sudo usermod -aG docker \$USER\n"
   printf "newgrp docker\n"
