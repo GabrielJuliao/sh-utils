@@ -29,8 +29,8 @@ This Bash script automates the installation of Docker on Ubuntu versions 20.04 t
    ```
 
 ### Option 2: Direct Execution via curl | bash
-[!CAUTION]
-This method is convenient but requires caution, as it executes code from the internet with root privileges.
+> [!CAUTION]
+> This method is convenient but requires caution, as it executes code from the internet with root privileges.
 
 You can directly download and execute the script using `curl` and `bash`.
 
