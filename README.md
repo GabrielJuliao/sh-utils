@@ -1,35 +1,37 @@
-# Shell Utils
-
 Welcome to the sh-utils repository! This repository hosts a collection of useful Bash shell utilities and scripts.
 
 ## Scripts
+
+### Ubuntu Docker Installation Script
+
+The Docker Installation Script (`install_docker_ubuntu_20_04_through_22_04.sh`) automates the installation of Docker on Ubuntu versions 20.04 through 22.04. It handles the uninstallation of old Docker versions, sets up the Docker repository, installs Docker Engine and CLI components, and starts the Docker service.
+
+- **[View Script Documentation](ubuntu/install_docker_ubuntu_20_04_through_22_04.md)**: Detailed documentation on how to use `install_docker_ubuntu_20_04_through_22_22.sh`.
 
 ### Git Repository URL Migration Script
 
 The Git Repository URL Migration Script (`swap_remote_origin_url_with_expression.sh`) automates the migration of Git repository remote URLs from one format to another. It iterates through all subdirectories within a specified directory (or the current directory by default), checks if they are Git repositories, and updates their remote URLs based on user-defined rules using `sed`.
 
-- **[View Script Documentation](git/swap_remote_origin_url_with_expression.md)**: Detailed documentation on how to install, use, and contribute to `swap_remote_origin_url_with_expression.sh`.
+- **[View Script Documentation](git/swap_remote_origin_url_with_expression.md)**: Detailed documentation on how to use `swap_remote_origin_url_with_expression.sh`.
 
-### Future Scripts
-
-_(future scripts and utilities are planned for inclusion in sh-utils)_
-
-## Usage
+### Usage
 
 To use any script from this repository, you can clone the repository or directly download and execute the scripts using `curl` and `bash`.
 
-### Example Usage
+#### Example Usage
 
 ```bash
-# Clone the repository
+# By Cloning the repository
 git clone https://github.com/GabrielJuliao/sh-utils.git
-cd sh-utils
+cd sh-utils/<script-dir>
+chmod +x <desired-script>
+./<desired-script>
 
-# Run <desired-script> with curl
+# Running with curl | bash
 curl -s https://raw.githubusercontent.com/GabrielJuliao/sh-utils/main/<script-dir>/<desired-script>.sh | bash -s -- <script-args>
 ```
 
-## Contributing
+### Contributing
 
 We welcome contributions! To contribute to the sh-utils repository:
 
