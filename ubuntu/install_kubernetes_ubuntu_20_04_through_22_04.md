@@ -90,7 +90,8 @@ You can configure the script by adjusting the variables at the top of script.
 
 ### Option 2: Direct Execution via curl | bash
 
-> **Caution**: This method is convenient but requires caution, as it executes code from the internet with root privileges.
+> [!CAUTION]
+> This method is convenient but requires caution, as it executes code from the internet with root privileges.
 
 You can directly download and execute the script using `curl` and `bash`.
 
