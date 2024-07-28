@@ -8,6 +8,12 @@ This repository contains a growing collection of Bash shell utilities and script
 
 ### Scripts
 
+#### Ubuntu Kubernetes Installation
+
+Automates Kubernetes installation on Ubuntu versions 20.04 through 22.04.
+
+- **[Documentation](ubuntu/install_kubernetes_ubuntu_20_04_through_22_04.md)**
+
 #### Ubuntu Docker Installation
 
 Automates Docker installation on Ubuntu versions 20.04 through 22.04.
