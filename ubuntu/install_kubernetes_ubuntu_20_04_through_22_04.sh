@@ -236,7 +236,7 @@ main() {
 
   # Prompt the user for control plane initialization
   while true; do
-    read -r -p "Do you want to init a control plane on this node? (y/n): " answer
+    read -rp "Do you want to init a control plane on this node? (y/n): " answer </dev/tty
     answer_lowercase="${answer,,}"
     if [[ $answer_lowercase == "yes" || $answer_lowercase == "y" ]]; then
       init_control_plane
