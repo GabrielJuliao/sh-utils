@@ -76,7 +76,7 @@ check_root() {
 # Function to uninstall old versions of Docker
 uninstall_old_docker() {
   log_info "Uninstalling old versions of Docker, if any."
-  run_and_log "apt-get remove -y docker docker-engine docker.io containerd runc"
+  run_and_log "apt-get remove -y docker docker-engine docker.io containerd runc || echo Docker is not installed."
 }
 
 # Function to update the package index
